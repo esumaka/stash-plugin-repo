@@ -8,7 +8,7 @@
 
 ## 插件列表
 
-- [External Player Support](projects/external-player-support/README.md)
+- [External Player Support](projects/external-player-support/README.zh-Hans.md)
   - 该插件添加了对某些媒体播放器的支持，可以在短片卡片和短片详情页中选择播放器播放视频。
 
 ## 安装插件
