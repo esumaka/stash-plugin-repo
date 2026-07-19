@@ -1,0 +1,12 @@
+name: External Player Support
+description: This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
+version: 1.0.0
+url: 
+
+ui:
+  javascript:
+    - main.js
+  css:
+    - style.css
+  assets:
+    /: assets

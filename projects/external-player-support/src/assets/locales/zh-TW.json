@@ -1,0 +1,14 @@
+{
+  "settings.openButton": "設定",
+  "settings.modal.title": "外部播放器設定",
+  "settings.noteBold": "注意：",
+  "settings.noteText": "所有設定只會影響目前用戶端",
+  "settings.singlePlayerMode": "單播放器模式",
+  "settings.singlePlayerModeHint": "開啟後，短片卡片底部的播放器選擇器會被替換成下方選擇的播放器按鈕。",
+  "settings.playerSelection": "播放器選擇",
+  "settings.reset": "重設所有設定",
+  "settings.cancel": "取消",
+  "settings.confirm": "確認",
+  "tab.label": "播放器",
+  "tab.header": "用外部播放器播放："
+}

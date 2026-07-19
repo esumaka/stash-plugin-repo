@@ -1,24 +1,46 @@
-# Template for creating Stash plugins source index
+[English](README.md) | [简体中文](README.zh-Hans.md)
 
-This template allows you to create a new repository with a few clicks with preconfigured GitHub action to publish your plugins source index. 
-_This assumes you already know how to create plugins for Stash. If you don't, first read [this](https://docs.stashapp.cc/in-app-manual/plugins/#creating-plugins)._
+---
 
-## How to use it?
+# Stash Plugin Repository
 
-1. Click **Use this template** > **Create a new repository**. 
-1. Choose a repository name and click **Create repository**.
-1. Open **Settings** and head to **Pages**.
-1. Under Build and deployment select the Source as GitHub Actions.
+A collection of plugins for [Stash](https://github.com/stashapp/stash), maintained by esumaka.
 
-Now add your plugins to [plugins](/plugins) directory and they will be automatically published to the source index.
+## Plugin List
 
-Source index URL: [`https://<your-username>.github.io/<repository-name>/main/index.yml`](https://<your-username>.github.io/<repository-name>/main/index.yml)
+- [External Player Support](projects/external-player-support/README.md)
+  - This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 
-## Share your plugins
+## Installing Plugins
 
-- [Create a new topic](https://discourse.stashapp.cc/t/-/33) for your plugin on the community forum.
-- [Add your source index to the list](https://discourse.stashapp.cc/t/-/122) on the Stash community forum.
+1. In Stash, go to **Settings** → **Plugins**
+2. Click **Add Source** and fill in the following:
+   - **Name**: `esumaka plugin repo`
+   - **Source URL**: `https://esumaka.github.io/stash-plugin-repo/main/index.yml`
+3. Click **Confirm** to add the source
+4. Select the plugin you want from the Available Plugins list and click **Install**
+5. Refresh the Stash page for the plugin to take effect
 
-## License
+## Development
 
-The default license is set to [AGPL-3.0](/LICENCE). Before publishing any plugins you can change it.
+### Requirements
+
+- [Node.js](https://nodejs.org/) >= 18
+- [pnpm](https://pnpm.io/)
+
+### Building a Plugin
+
+- Run `cd projects/{name}`, where `{name}` is the project directory name
+- Run `pnpm install`
+- Run `npm run build`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `build` script
+
+### Deploying to Local Stash (for debugging)
+
+- Before deploying, modify the `pluginsDir` in `deploy.js` to point to your Stash plugins directory
+- Run `cd projects/{name}`, where `{name}` is the project directory name
+- Run `npm run deploy`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `deploy` script
+- In Stash, go to **Settings** → **Plugins**, click **Reload Plugins**, then refresh the Stash page for the plugin to take effect
+
+## Contributing
+
+Issues and Pull Requests are welcome.

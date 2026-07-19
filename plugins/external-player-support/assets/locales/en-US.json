@@ -1,0 +1,14 @@
+{
+  "settings.openButton": "Settings",
+  "settings.modal.title": "External Player Settings",
+  "settings.noteBold": "Note: ",
+  "settings.noteText": "All settings only affect this client",
+  "settings.singlePlayerMode": "Single player mode",
+  "settings.singlePlayerModeHint": "When turned on, the player selector at the bottom of scene cards will be replaced with the player button selected below.",
+  "settings.playerSelection": "Player selection",
+  "settings.reset": "Reset all settings",
+  "settings.cancel": "Cancel",
+  "settings.confirm": "Confirm",
+  "tab.label": "Players",
+  "tab.header": "Play with external player:"
+}
