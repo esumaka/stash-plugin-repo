@@ -1,7 +1,7 @@
-name: External Player Support
+name: External Player Launcher
 description: This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 version: 1.0.0
-url: https://github.com/esumaka/stash-plugin-repo/tree/main/projects/external-player-support
+url: https://github.com/esumaka/stash-plugin-repo/tree/main/projects/external-player-launcher
 
 ui:
   javascript:

@@ -20,9 +20,9 @@
   const { faGear } = FontAwesomeSolid;
   const { useConfiguration } = PluginApi.utils.StashService;
   const { IntlProvider, FormattedMessage } = Intl;
-  const pluginID = "external-player-support";
-  const iconsPath = "./plugin/external-player-support/assets/icons";
-  const localesBase = `./plugin/external-player-support/assets/locales`;
+  const pluginID = "external-player-launcher";
+  const iconsPath = "./plugin/external-player-launcher/assets/icons";
+  const localesBase = `./plugin/external-player-launcher/assets/locales`;
   const storageKey = `${pluginID}.settings`;
   const playerButtons = [
     { id: "iina", name: "IINA", onClick: openIINA },

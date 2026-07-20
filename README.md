@@ -8,7 +8,7 @@ A collection of plugins for [Stash](https://github.com/stashapp/stash), maintain
 
 ## Plugin List
 
-- [External Player Support](projects/external-player-support/README.md)
+- [External Player Launcher](projects/external-player-launcher/README.md)
   - This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 
 ## Installing Plugins

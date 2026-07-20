@@ -2,7 +2,7 @@
 
 ---
 
-# External Player Support
+# External Player Launcher
 
 This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 

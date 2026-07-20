@@ -10,9 +10,9 @@
   const { useConfiguration } = PluginApi.utils.StashService;
   const { IntlProvider, FormattedMessage } = Intl;
 
-  const pluginID = 'external-player-support'
-  const iconsPath = "./plugin/external-player-support/assets/icons";
-  const localesBase = `./plugin/external-player-support/assets/locales`;
+  const pluginID = 'external-player-launcher';
+  const iconsPath = "./plugin/external-player-launcher/assets/icons";
+  const localesBase = `./plugin/external-player-launcher/assets/locales`;
   const storageKey = `${pluginID}.settings`;
 
   const playerButtons = [
@@ -141,7 +141,7 @@
   function saveSettings(nextSettings: SettingsState) {
     const normalizedSettings = normalizeSettings(nextSettings);
     localStorage.setItem(storageKey, JSON.stringify(normalizedSettings));
-    window.dispatchEvent(new CustomEvent("external-player-support-settings-change", { detail: normalizedSettings }));
+    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: normalizedSettings }));
   }
 
   function useSettingsState() {
@@ -150,10 +150,10 @@
     React.useEffect(() => {
       const syncSettings = () => setSettings(readSettings());
       window.addEventListener("storage", syncSettings);
-      window.addEventListener("external-player-support-settings-change", syncSettings as EventListener);
+      window.addEventListener("external-player-launcher-settings-change", syncSettings as EventListener);
       return () => {
         window.removeEventListener("storage", syncSettings);
-        window.removeEventListener("external-player-support-settings-change", syncSettings as EventListener);
+        window.removeEventListener("external-player-launcher-settings-change", syncSettings as EventListener);
       };
     }, []);
 
@@ -770,7 +770,7 @@
     );
   }
 
-  // Patch the ScenePage to add a new tab for external player support
+  // Patch the ScenePage to add a new tab for external player launcher
   PluginApi.patch.after(
     "ScenePage.Tabs",
     function (props: any, _: any, original: any) {

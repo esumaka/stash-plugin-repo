@@ -7,7 +7,7 @@ const path = require('path');
 // .tsx files are bundled and compiled, other files/directories are copied as-is
 const COPY_PATTERNS = {
   'src/main.tsx': '.',
-  'src/external-player-support.yml': '.',
+  'src/external-player-launcher.yml': '.',
   'src/*.css': '.',
   'src/assets': '.',
 };
