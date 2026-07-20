@@ -6,6 +6,28 @@
 
 This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 
+## Features
+
+- Adds a player dropdown menu at the bottom of scene cards for quickly selecting an external player
+- When "Single player mode" is enabled, the dropdown is replaced with a single player button for one-click playback
+- Scene detail pages also support launching external players
+- Individual players can be shown or hidden in settings
+- Settings are browser-local, so different devices can have different configurations
+
+## Screenshots
+
+Scene card:
+
+![scene-card01](preview/scene-card01.jpg)
+
+Scene card (single player mode):
+
+![scene-card02](preview/scene-card02.jpg)
+
+Scene detail:
+
+![scene-detail](preview/scene-detail.jpg)
+
 ## Supported Players
 
 Supported media players and operating systems:
@@ -23,13 +45,9 @@ Supported media players and operating systems:
 | PotPlayer | ✅ | | | | |
 | VLC | ✅ (requires [vlc-protocol](https://github.com/muse90673/vlc-protocol/tree/develop)) | ✅ | ✅ | ✅ (requires [vlc-protocol](https://github.com/muse90673/vlc-protocol/tree/develop)) | ✅ (requires [vlc-protocol](https://github.com/muse90673/vlc-protocol/tree/develop)) |
 
-## Features
+## Installing the Plugin
 
-- Adds a player dropdown menu at the bottom of scene cards for quickly selecting an external player
-- When "Single player mode" is enabled, the dropdown is replaced with a single player button for one-click playback
-- Scene detail pages also support launching external players
-- Individual players can be shown or hidden in settings
-- Settings are browser-local, so different devices can have different configurations
+See [Installing Plugins](/README.md#installing-plugins)
 
 ## Usage
 
@@ -37,24 +55,6 @@ Supported media players and operating systems:
 - Click the player icon at the bottom of a scene card and select your desired player from the dropdown menu
 - Alternatively, go to the scene detail page, click the "Players" tab, then click the desired player button
 - Your browser may show a dialog like "trying to open xxx?" — click "Open" to proceed
-
-## Screenshots
-
-Scene card:
-
-![scene-card01](preview/scene-card01.jpg)
-
-Scene card (single player mode):
-
-![scene-card02](preview/scene-card02.jpg)
-
-Scene detail:
-
-![scene-detail](preview/scene-detail.jpg)
-
-## Installing the Plugin
-
-See [Installing Plugins](/README.md#installing-plugins)
 
 ## Warning
 
