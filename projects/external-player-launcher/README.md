@@ -10,6 +10,8 @@ This plugin adds support for launching videos in external media players from sce
 
 Supported media players and operating systems:
 
+⚠️ Note: some players require additional tools to function properly
+
 | Player | Windows | Android | iOS | macOS | Linux |
 |--------|---------|---------|-----|-------|-------|
 | IINA | | | | ✅ | |
@@ -28,6 +30,13 @@ Supported media players and operating systems:
 - Scene detail pages also support launching external players
 - Individual players can be shown or hidden in settings
 - Settings are browser-local, so different devices can have different configurations
+
+## Usage
+
+- Make sure you have a supported player installed — see [Supported Players](#supported-players)
+- Click the player icon at the bottom of a scene card and select your desired player from the dropdown menu
+- Alternatively, go to the scene detail page, click the "Players" tab, then click the desired player button
+- Your browser may show a dialog like "trying to open xxx?" — click "Open" to proceed
 
 ## Screenshots
 
