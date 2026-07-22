@@ -28,18 +28,26 @@
 - [Node.js](https://nodejs.org/) >= 18
 - [pnpm](https://pnpm.io/)
 
+### 进入项目目录
+
+- 运行 `cd projects/{项目名}`
+
 ### 构建插件
 
-- 运行 `cd projects/{name}`，`{name}` 为对应的项目名称
 - 运行 `pnpm install`
 - 运行 `npm run build`，或者在 Visual Studio Code 的 **资源管理器 → NPM脚本** 中，点击运行 `build` 脚本。
+- 构建产物会被输出到项目的 `dist` 文件夹中
 
 ### 部署到本地 Stash（开发调试）
 
 - 部署前先修改 `deploy.js` 的 `pluginsDir` 为自己的 Stash 插件目录
-- 运行 `cd projects/{name}`，`{name}` 为对应的项目名称
 - 运行 `npm run deploy`，或者在 Visual Studio Code 的 **资源管理器 → NPM脚本** 中，点击运行 `deploy` 脚本。
 - 在 Stash 的 **设置** → **插件** 页面中点击 **重载插件**，然后刷新 Stash 页面使插件生效。
+
+### 发布插件
+
+- 运行 `npm run publish`，或者在 Visual Studio Code 的 **资源管理器 → NPM脚本** 中，点击运行 `publish` 脚本。
+- 构建产物会被复制到 `plugins/{项目名}`
 
 ## 贡献
 

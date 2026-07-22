@@ -28,18 +28,26 @@ A collection of plugins for [Stash](https://github.com/stashapp/stash), maintain
 - [Node.js](https://nodejs.org/) >= 18
 - [pnpm](https://pnpm.io/)
 
+### Enter the Project Directory
+
+- Run `cd projects/{project-name}`
+
 ### Building a Plugin
 
-- Run `cd projects/{name}`, where `{name}` is the project directory name
 - Run `pnpm install`
 - Run `npm run build`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `build` script
+- Build output will be placed in the project's `dist` folder
 
 ### Deploying to Local Stash (for debugging)
 
 - Before deploying, modify the `pluginsDir` in `deploy.js` to point to your Stash plugins directory
-- Run `cd projects/{name}`, where `{name}` is the project directory name
 - Run `npm run deploy`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `deploy` script
 - In Stash, go to **Settings** → **Plugins**, click **Reload Plugins**, then refresh the Stash page for the plugin to take effect
+
+### Publishing a Plugin
+
+- Run `npm run publish`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `publish` script
+- The build output will be copied to `plugins/{project-name}`
 
 ## Contributing
 
