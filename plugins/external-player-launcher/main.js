@@ -122,17 +122,17 @@
   function saveSettings(nextSettings) {
     const normalizedSettings = normalizeSettings(nextSettings);
     localStorage.setItem(storageKey, JSON.stringify(normalizedSettings));
-    window.dispatchEvent(new CustomEvent("external-player-support-settings-change", { detail: normalizedSettings }));
+    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: normalizedSettings }));
   }
   function useSettingsState() {
     const [settings, setSettings] = React.useState(() => readSettings());
     React.useEffect(() => {
       const syncSettings = () => setSettings(readSettings());
       window.addEventListener("storage", syncSettings);
-      window.addEventListener("external-player-support-settings-change", syncSettings);
+      window.addEventListener("external-player-launcher-settings-change", syncSettings);
       return () => {
         window.removeEventListener("storage", syncSettings);
-        window.removeEventListener("external-player-support-settings-change", syncSettings);
+        window.removeEventListener("external-player-launcher-settings-change", syncSettings);
       };
     }, []);
     return { settings };

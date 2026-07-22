@@ -14,13 +14,13 @@ const COPY_PATTERNS = {
 // ================================================
 
 const projectName = path.basename(__dirname);
-const targetDir = path.resolve(__dirname, '../../plugins', projectName);
+const targetDir = path.resolve(__dirname, 'dist');
 
 async function runBuild() {
   try {
     console.log(`🚀 [${projectName}] Starting build...`);
 
-    // Force clean and rebuild target plugins directory
+    // Force clean and rebuild target directory
     fs.rmSync(targetDir, { recursive: true, force: true });
     fs.mkdirSync(targetDir, { recursive: true });
 
@@ -66,7 +66,7 @@ async function runBuild() {
       }
     }
 
-    console.log(`✅ [${projectName}] Build successful! Output to plugins/${projectName}`);
+    console.log(`✅ [${projectName}] Build successful! Output to ${targetDir}`);
 
   } catch (error) {
     console.error(`❌ [${projectName}] Build failed:`, error);

@@ -7,12 +7,18 @@ const pluginsDir = 'D:/Stash/plugins';
 
 const projectName = path.basename(__dirname);
 const destDir = path.join(pluginsDir, projectName);
-const srcDir = path.resolve(__dirname, '../../plugins', projectName);
+const srcDir = path.resolve(__dirname, 'dist');
 
 try {
     if (!fs.existsSync(pluginsDir)) {
         console.error('❌ Destination base directory does not exist: ' + pluginsDir);
         console.error('   Please check the `pluginsDir` configuration.');
+        process.exit(1);
+    }
+
+    if (!fs.existsSync(srcDir)) {
+        console.error('❌ Source directory does not exist: ' + srcDir);
+        console.error('   Please run the build first to generate the dist folder.');
         process.exit(1);
     }
 
