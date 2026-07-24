@@ -563,20 +563,20 @@
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="note-block">
+            <div className="ep-note-block">
               ⚠️<strong><FormattedMessage id="settings.noteBold" /></strong>
               <FormattedMessage id="settings.noteText" />
             </div>
 
-            <div className="external-player-settings-section">
-              <div className="external-player-settings-heading">
+            <div className="ep-section">
+              <div className="ep-heading">
                 <FormattedMessage id="settings.displayGroupTitle" />
               </div>
-              <div className="external-player-settings-desc">
+              <div className="ep-desc">
                 <FormattedMessage id="settings.displayGroupDesc" />
               </div>
 
-              <div className="external-player-settings-options">
+              <div className="ep-options">
                 <Form.Check
                   type="switch"
                   id="external-player-show-card-buttons"
@@ -589,12 +589,12 @@
                     }))
                   }
                 />
-                <div className="external-player-settings-hint">
+                <div className="ep-hint">
                   <FormattedMessage id="settings.showSceneCardButtonsHint" />
                 </div>
               </div>
 
-              <div className="external-player-settings-options">
+              <div className="ep-options">
                 <Form.Check
                   type="switch"
                   id="external-player-show-detail-buttons"
@@ -607,18 +607,18 @@
                     }))
                   }
                 />
-                <div className="external-player-settings-hint">
+                <div className="ep-hint">
                   <FormattedMessage id="settings.showSceneDetailButtonsHint" />
                 </div>
               </div>
             </div>
 
-            <div className="external-player-settings-section">
-              <div className="external-player-settings-heading">
+            <div className="ep-section">
+              <div className="ep-heading">
                 <FormattedMessage id="settings.playerGroupTitle" />
               </div>
 
-              <div className="external-player-settings-options">
+              <div className="ep-options">
                 <Form.Check
                   type="switch"
                   id="external-player-single-mode"
@@ -633,16 +633,16 @@
                     }))
                   }
                 />
-                <div className="external-player-settings-hint">
+                <div className="ep-hint">
                   <FormattedMessage id="settings.singlePlayerModeHint" />
                 </div>
               </div>
 
-              <div className="external-player-settings-options">
-                <div className="external-player-settings-subheading">
+              <div className="ep-options">
+                <div className="ep-subheading">
                   <FormattedMessage id="settings.playerDisplay" />
                 </div>
-                <div className="external-player-settings-list">
+                <div className="ep-list">
                   {playerButtons.map((button) => {
                     // excludedPlayerIds is the exclusion list; players not in it are checked
                     const checked = draftSettings.singlePlayerMode
@@ -655,11 +655,11 @@
                         type={draftSettings.singlePlayerMode ? "radio" : "checkbox"}
                         id={`external-player-${button.id}`}
                         name="external-player-selection"
-                        className="external-player-settings-item"
+                        className="ep-item"
                         checked={checked}
                         onChange={() => togglePlayer(button.id)}
                         label={
-                          <span className="external-player-settings-label">
+                          <span className="ep-label">
                             <img
                               src={`${iconsPath}/${button.id}.webp`}
                               alt={button.name}
@@ -675,7 +675,7 @@
               </div>
             </div>
 
-            <div className="external-player-settings-section">
+            <div className="ep-section">
               <Button variant="danger" onClick={resetDraftSettings}>
                 <FormattedMessage id="settings.reset" />
               </Button>

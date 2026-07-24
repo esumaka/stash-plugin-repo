@@ -1,14 +1,15 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
+const { sassPlugin } = require('esbuild-sass-plugin')
 
 // ==================== CONFIG ====================
 // Config format: source path -> destination folder
 // .tsx files are bundled and compiled, other files/directories are copied as-is
 const COPY_PATTERNS = {
   'src/main.tsx': '.',
+  'src/style.scss': '.',
   'src/external-player-launcher.yml': '.',
-  'src/*.css': '.',
   'src/assets': '.',
 };
 // ================================================
@@ -43,6 +44,24 @@ async function runBuild() {
           target: ['es2022'],
         //   sourcemap: true,
         });
+      } else if (srcPattern.endsWith('.scss')) {
+        // Compile standalone SCSS files to CSS
+        const matchedFiles = fs.globSync(srcPattern, { cwd: __dirname });
+
+        for (const relativeFile of matchedFiles) {
+          const srcPath = path.join(__dirname, relativeFile);
+          const fileName = path.basename(relativeFile, '.scss');
+          const destPath = path.join(targetDir, destFolder, `${fileName}.css`);
+
+          fs.mkdirSync(path.dirname(destPath), { recursive: true });
+
+          await esbuild.build({
+            entryPoints: [srcPath],
+            bundle: false,
+            outfile: destPath,
+            plugins: [sassPlugin()],
+          });
+        }
       } else {
         // Process other files and directories
         const matchedFiles = fs.globSync(srcPattern, { cwd: __dirname });
