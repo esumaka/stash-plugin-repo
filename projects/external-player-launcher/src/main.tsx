@@ -93,55 +93,51 @@
     excludedPlayerIds: string[];
     singlePlayerId: string;
     singlePlayerMode: boolean;
+    /** Show external player buttons on scene cards */
+    showSceneCardButtons: boolean;
+    /** Show external player buttons on scene detail page (tabs) */
+    showSceneDetailButtons: boolean;
   }
 
   const defaultSettings: SettingsState = {
     excludedPlayerIds: [],
     singlePlayerId: playerButtons[0].id,
     singlePlayerMode: false,
+    showSceneCardButtons: true,
+    showSceneDetailButtons: true,
   };
 
   function cloneSettings(settings: SettingsState): SettingsState {
-    return {
-      excludedPlayerIds: [...settings.excludedPlayerIds],
-      singlePlayerId: settings.singlePlayerId,
-      singlePlayerMode: settings.singlePlayerMode,
-    };
-  }
-
-  function normalizeSettings(parsed?: Partial<SettingsState>): SettingsState {
-    const validIds = playerButtons.map((button) => button.id);
-    const excludedPlayerIds = Array.isArray(parsed?.excludedPlayerIds)
-      ? parsed.excludedPlayerIds.filter((id): id is string => validIds.includes(id))
-      : [];
-
-    const singlePlayerId = validIds.includes(parsed?.singlePlayerId || "")
-      ? parsed!.singlePlayerId!
-      : playerButtons[0].id;
-
-    return {
-      excludedPlayerIds,
-      singlePlayerId,
-      singlePlayerMode: Boolean(parsed?.singlePlayerMode),
-    };
+    return { ...settings };
   }
 
   function readSettings(): SettingsState {
+    const validIds = playerButtons.map((button) => button.id);
+
     try {
       const raw = localStorage.getItem(storageKey);
-      if (!raw) return cloneSettings(defaultSettings);
+      if (!raw) return { ...defaultSettings };
 
-      const parsed = JSON.parse(raw) as Partial<SettingsState>;
-      return normalizeSettings(parsed);
+      const stored = JSON.parse(raw);
+      // Two-tier fallback: localStorage -> defaultSettings
+      const merged: SettingsState = { ...defaultSettings, ...stored };
+
+      if (Array.isArray(merged.excludedPlayerIds)) {
+        merged.excludedPlayerIds = merged.excludedPlayerIds.filter((id) => validIds.includes(id));
+      }
+      if (!validIds.includes(merged.singlePlayerId)) {
+        merged.singlePlayerId = defaultSettings.singlePlayerId;
+      }
+
+      return merged;
     } catch {
-      return cloneSettings(defaultSettings);
+      return { ...defaultSettings };
     }
   }
 
   function saveSettings(nextSettings: SettingsState) {
-    const normalizedSettings = normalizeSettings(nextSettings);
-    localStorage.setItem(storageKey, JSON.stringify(normalizedSettings));
-    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: normalizedSettings }));
+    localStorage.setItem(storageKey, JSON.stringify(nextSettings));
+    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: nextSettings }));
   }
 
   function useSettingsState() {
@@ -550,7 +546,7 @@
           className="external-player-settings-trigger"
           onClick={openModal}
         >
-          <Icon icon={faGear}/>
+          <Icon icon={faGear} />
           <FormattedMessage id="settings.openButton" />
         </Button>
 
@@ -573,58 +569,109 @@
             </div>
 
             <div className="external-player-settings-section">
-              <Form.Check
-                type="switch"
-                id="external-player-single-mode"
-                label={intl.formatMessage({ id: 'settings.singlePlayerMode' })}
-                checked={draftSettings.singlePlayerMode}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setDraftSettings((current) => ({
-                    ...current,
-                    singlePlayerMode: event.target.checked,
-                    singlePlayerId: current.singlePlayerId || playerButtons[0].id,
-                    excludedPlayerIds: current.excludedPlayerIds.length ? current.excludedPlayerIds : [...defaultSettings.excludedPlayerIds],
-                  }))
-                }
-              />
-              <div className="external-player-settings-hint">
-                <FormattedMessage id="settings.singlePlayerModeHint" />
+              <div className="external-player-settings-heading">
+                <FormattedMessage id="settings.displayGroupTitle" />
+              </div>
+              <div className="external-player-settings-desc">
+                <FormattedMessage id="settings.displayGroupDesc" />
+              </div>
+
+              <div className="external-player-settings-options">
+                <Form.Check
+                  type="switch"
+                  id="external-player-show-card-buttons"
+                  label={intl.formatMessage({ id: 'settings.showSceneCardButtons' })}
+                  checked={draftSettings.showSceneCardButtons}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setDraftSettings((current) => ({
+                      ...current,
+                      showSceneCardButtons: event.target.checked,
+                    }))
+                  }
+                />
+                <div className="external-player-settings-hint">
+                  <FormattedMessage id="settings.showSceneCardButtonsHint" />
+                </div>
+              </div>
+
+              <div className="external-player-settings-options">
+                <Form.Check
+                  type="switch"
+                  id="external-player-show-detail-buttons"
+                  label={intl.formatMessage({ id: 'settings.showSceneDetailButtons' })}
+                  checked={draftSettings.showSceneDetailButtons}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setDraftSettings((current) => ({
+                      ...current,
+                      showSceneDetailButtons: event.target.checked,
+                    }))
+                  }
+                />
+                <div className="external-player-settings-hint">
+                  <FormattedMessage id="settings.showSceneDetailButtonsHint" />
+                </div>
               </div>
             </div>
 
             <div className="external-player-settings-section">
               <div className="external-player-settings-heading">
-                <FormattedMessage id="settings.playerSelection" />
+                <FormattedMessage id="settings.playerGroupTitle" />
               </div>
-              <div className="external-player-settings-list">
-                {playerButtons.map((button) => {
-                  // excludedPlayerIds is the exclusion list; players not in it are checked
-                  const checked = draftSettings.singlePlayerMode
-                    ? draftSettings.singlePlayerId === button.id
-                    : !draftSettings.excludedPlayerIds.includes(button.id);
 
-                  return (
-                    <Form.Check
-                      key={button.id}
-                      type={draftSettings.singlePlayerMode ? "radio" : "checkbox"}
-                      id={`external-player-${button.id}`}
-                      name="external-player-selection"
-                      className="external-player-settings-item"
-                      checked={checked}
-                      onChange={() => togglePlayer(button.id)}
-                      label={
-                        <span className="external-player-settings-label">
-                          <img
-                            src={`${iconsPath}/${button.id}.webp`}
-                            alt={button.name}
-                            style={{ height: "1.4em", width: "1.4em" }}
-                          />
-                          <span>{button.name}</span>
-                        </span>
-                      }
-                    />
-                  );
-                })}
+              <div className="external-player-settings-options">
+                <Form.Check
+                  type="switch"
+                  id="external-player-single-mode"
+                  label={intl.formatMessage({ id: 'settings.singlePlayerMode' })}
+                  checked={draftSettings.singlePlayerMode}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setDraftSettings((current) => ({
+                      ...current,
+                      singlePlayerMode: event.target.checked,
+                      singlePlayerId: current.singlePlayerId || playerButtons[0].id,
+                      excludedPlayerIds: current.excludedPlayerIds.length ? current.excludedPlayerIds : [...defaultSettings.excludedPlayerIds],
+                    }))
+                  }
+                />
+                <div className="external-player-settings-hint">
+                  <FormattedMessage id="settings.singlePlayerModeHint" />
+                </div>
+              </div>
+
+              <div className="external-player-settings-options">
+                <div className="external-player-settings-subheading">
+                  <FormattedMessage id="settings.playerDisplay" />
+                </div>
+                <div className="external-player-settings-list">
+                  {playerButtons.map((button) => {
+                    // excludedPlayerIds is the exclusion list; players not in it are checked
+                    const checked = draftSettings.singlePlayerMode
+                      ? draftSettings.singlePlayerId === button.id
+                      : !draftSettings.excludedPlayerIds.includes(button.id);
+
+                    return (
+                      <Form.Check
+                        key={button.id}
+                        type={draftSettings.singlePlayerMode ? "radio" : "checkbox"}
+                        id={`external-player-${button.id}`}
+                        name="external-player-selection"
+                        className="external-player-settings-item"
+                        checked={checked}
+                        onChange={() => togglePlayer(button.id)}
+                        label={
+                          <span className="external-player-settings-label">
+                            <img
+                              src={`${iconsPath}/${button.id}.webp`}
+                              alt={button.name}
+                              style={{ height: "1.4em", width: "1.4em" }}
+                            />
+                            <span>{button.name}</span>
+                          </span>
+                        }
+                      />
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -739,6 +786,9 @@
   }
 
   function ExternalPlayerTabLabel() {
+    const { settings } = useSettingsState();
+    if (!settings.showSceneDetailButtons) return null;
+
     return (
       <Nav.Item key="external-player-tab-nav">
         <Nav.Link eventKey="external-player-tab">
@@ -753,7 +803,10 @@
     );
   }
 
-  function ExternalPlayerTabHeader({ sceneProps }: { sceneProps: any }) {
+  function ExternalPlayerTabContent({ sceneProps }: { sceneProps: any }) {
+    const { settings } = useSettingsState();
+    if (!settings.showSceneDetailButtons) return null;
+
     return (
       <Tab.Pane
         key="external-player-tab-content"
@@ -789,7 +842,7 @@
     function (props: any, _: any, original: any) {
 
       original.props.children.push(
-        <ExternalPlayerTabHeader sceneProps={props} />
+        <ExternalPlayerTabContent sceneProps={props} />
       );
 
       return original;
@@ -801,6 +854,10 @@
     "SceneCard.Popovers",
     function (props: any, _: any, original: any) {
       // console.log("ID:", props.scene.id, " Title:", props.scene.title, " result:", result);
+
+      const settings = readSettings();
+      if (!settings.showSceneCardButtons) return original;
+
       if (!original.props.children) {
         original.props.children = createButtonGroup();
       }
