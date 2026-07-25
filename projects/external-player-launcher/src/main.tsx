@@ -570,10 +570,7 @@
 
             <div className="ep-section">
               <div className="ep-heading">
-                <FormattedMessage id="settings.displayGroupTitle" />
-              </div>
-              <div className="ep-desc">
-                <FormattedMessage id="settings.displayGroupDesc" />
+                <FormattedMessage id="settings.entryGroupTitle" />
               </div>
 
               <div className="ep-options">
