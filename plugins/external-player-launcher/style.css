@@ -5,20 +5,6 @@
   margin-left: 0.5rem;
   border: 0;
 }
-
-.external-player-settings-modal {
-  max-width: min(32rem, calc(100vw - 2rem));
-}
-
-.external-player-settings-modal-content {
-  max-height: 80vh;
-}
-
-.external-player-settings-modal .modal-body {
-  overflow-y: auto;
-  padding: 1rem 1.6rem;
-}
-
 .external-player-tab-header {
   display: flex;
   align-items: center;
@@ -26,47 +12,58 @@
   gap: 1rem;
   margin-bottom: 1rem;
 }
-
-.external-player-settings-section {
-  margin-bottom: 1.5rem;
+.external-player-settings-modal {
+  max-width: min(32rem, 100vw - 2rem);
 }
-
-.external-player-settings-heading {
-  font-weight: 600;
+.external-player-settings-modal .modal-body {
+  overflow-y: auto;
+  padding: 1rem 1.6rem;
+}
+.external-player-settings-modal-content {
+  max-height: 80vh;
+}
+.external-player-settings-modal-content .ep-section {
+  margin-bottom: 2rem;
+}
+.external-player-settings-modal-content .ep-heading {
+  margin-bottom: 0.75rem;
+  font-size: 16px;
+  font-weight: bold;
+}
+.external-player-settings-modal-content .ep-subheading {
   margin-bottom: 0.5rem;
+  font-size: 14px;
+  font-weight: bold;
 }
-
-.external-player-settings-hint {
-  margin-top: 0.4rem;
-  /* color: var(--secondary, #6c757d); */
-  font-size: 0.8rem;
+.external-player-settings-modal-content .ep-desc {
+  margin-bottom: 0.75rem;
+  font-size: 12px;
 }
-
-.external-player-settings-list {
+.external-player-settings-modal-content .ep-hint {
+  font-size: 12px;
+}
+.external-player-settings-modal-content .ep-options {
+  margin-bottom: 0.75rem;
+}
+.external-player-settings-modal-content .ep-options:last-child {
+  margin-bottom: 0;
+}
+.external-player-settings-modal-content .ep-list {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
-
-.external-player-settings-item {
+.external-player-settings-modal-content .ep-item {
   padding-left: 1.5rem;
 }
-
-.external-player-settings-label {
+.external-player-settings-modal-content .ep-label {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   margin-left: 0.75rem;
 }
-
-.external-player-settings-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  object-fit: contain;
-}
-
-.external-player-settings-modal-content .note-block {
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    background-color: rgba(30, 30, 30, 0.3)
+.external-player-settings-modal-content .ep-note-block {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  background-color: rgba(30, 30, 30, 0.3);
 }

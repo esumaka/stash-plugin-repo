@@ -90,39 +90,34 @@
   const defaultSettings = {
     excludedPlayerIds: [],
     singlePlayerId: playerButtons[0].id,
-    singlePlayerMode: false
+    singlePlayerMode: false,
+    showSceneCardButtons: true,
+    showSceneDetailButtons: true
   };
   function cloneSettings(settings) {
-    return {
-      excludedPlayerIds: [...settings.excludedPlayerIds],
-      singlePlayerId: settings.singlePlayerId,
-      singlePlayerMode: settings.singlePlayerMode
-    };
-  }
-  function normalizeSettings(parsed) {
-    const validIds = playerButtons.map((button) => button.id);
-    const excludedPlayerIds = Array.isArray(parsed?.excludedPlayerIds) ? parsed.excludedPlayerIds.filter((id) => validIds.includes(id)) : [];
-    const singlePlayerId = validIds.includes(parsed?.singlePlayerId || "") ? parsed.singlePlayerId : playerButtons[0].id;
-    return {
-      excludedPlayerIds,
-      singlePlayerId,
-      singlePlayerMode: Boolean(parsed?.singlePlayerMode)
-    };
+    return { ...settings };
   }
   function readSettings() {
+    const validIds = playerButtons.map((button) => button.id);
     try {
       const raw = localStorage.getItem(storageKey);
-      if (!raw) return cloneSettings(defaultSettings);
-      const parsed = JSON.parse(raw);
-      return normalizeSettings(parsed);
+      if (!raw) return { ...defaultSettings };
+      const stored = JSON.parse(raw);
+      const merged = { ...defaultSettings, ...stored };
+      if (Array.isArray(merged.excludedPlayerIds)) {
+        merged.excludedPlayerIds = merged.excludedPlayerIds.filter((id) => validIds.includes(id));
+      }
+      if (!validIds.includes(merged.singlePlayerId)) {
+        merged.singlePlayerId = defaultSettings.singlePlayerId;
+      }
+      return merged;
     } catch {
-      return cloneSettings(defaultSettings);
+      return { ...defaultSettings };
     }
   }
   function saveSettings(nextSettings) {
-    const normalizedSettings = normalizeSettings(nextSettings);
-    localStorage.setItem(storageKey, JSON.stringify(normalizedSettings));
-    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: normalizedSettings }));
+    localStorage.setItem(storageKey, JSON.stringify(nextSettings));
+    window.dispatchEvent(new CustomEvent("external-player-launcher-settings-change", { detail: nextSettings }));
   }
   function useSettingsState() {
     const [settings, setSettings] = React.useState(() => readSettings());
@@ -402,7 +397,31 @@
         contentClassName: "external-player-settings-modal-content"
       },
       /* @__PURE__ */ React.createElement(Modal.Header, { closeButton: true }, /* @__PURE__ */ React.createElement(Modal.Title, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.modal.title" }))),
-      /* @__PURE__ */ React.createElement(Modal.Body, null, /* @__PURE__ */ React.createElement("div", { className: "note-block" }, "\u26A0\uFE0F", /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.noteBold" })), /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.noteText" })), /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-section" }, /* @__PURE__ */ React.createElement(
+      /* @__PURE__ */ React.createElement(Modal.Body, null, /* @__PURE__ */ React.createElement("div", { className: "ep-note-block" }, "\u26A0\uFE0F", /* @__PURE__ */ React.createElement("strong", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.noteBold" })), /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.noteText" })), /* @__PURE__ */ React.createElement("div", { className: "ep-section" }, /* @__PURE__ */ React.createElement("div", { className: "ep-heading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.entryGroupTitle" })), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
+        Form.Check,
+        {
+          type: "switch",
+          id: "external-player-show-card-buttons",
+          label: intl.formatMessage({ id: "settings.showSceneCardButtons" }),
+          checked: draftSettings.showSceneCardButtons,
+          onChange: (event) => setDraftSettings((current) => ({
+            ...current,
+            showSceneCardButtons: event.target.checked
+          }))
+        }
+      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.showSceneCardButtonsHint" }))), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
+        Form.Check,
+        {
+          type: "switch",
+          id: "external-player-show-detail-buttons",
+          label: intl.formatMessage({ id: "settings.showSceneDetailButtons" }),
+          checked: draftSettings.showSceneDetailButtons,
+          onChange: (event) => setDraftSettings((current) => ({
+            ...current,
+            showSceneDetailButtons: event.target.checked
+          }))
+        }
+      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.showSceneDetailButtonsHint" })))), /* @__PURE__ */ React.createElement("div", { className: "ep-section" }, /* @__PURE__ */ React.createElement("div", { className: "ep-heading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.playerGroupTitle" })), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
         Form.Check,
         {
           type: "switch",
@@ -416,7 +435,7 @@
             excludedPlayerIds: current.excludedPlayerIds.length ? current.excludedPlayerIds : [...defaultSettings.excludedPlayerIds]
           }))
         }
-      ), /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.singlePlayerModeHint" }))), /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-section" }, /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-heading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.playerSelection" })), /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-list" }, playerButtons.map((button) => {
+      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.singlePlayerModeHint" }))), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement("div", { className: "ep-subheading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.playerDisplay" })), /* @__PURE__ */ React.createElement("div", { className: "ep-list" }, playerButtons.map((button) => {
         const checked = draftSettings.singlePlayerMode ? draftSettings.singlePlayerId === button.id : !draftSettings.excludedPlayerIds.includes(button.id);
         return /* @__PURE__ */ React.createElement(
           Form.Check,
@@ -425,10 +444,10 @@
             type: draftSettings.singlePlayerMode ? "radio" : "checkbox",
             id: `external-player-${button.id}`,
             name: "external-player-selection",
-            className: "external-player-settings-item",
+            className: "ep-item",
             checked,
             onChange: () => togglePlayer(button.id),
-            label: /* @__PURE__ */ React.createElement("span", { className: "external-player-settings-label" }, /* @__PURE__ */ React.createElement(
+            label: /* @__PURE__ */ React.createElement("span", { className: "ep-label" }, /* @__PURE__ */ React.createElement(
               "img",
               {
                 src: `${iconsPath}/${button.id}.webp`,
@@ -438,7 +457,7 @@
             ), /* @__PURE__ */ React.createElement("span", null, button.name))
           }
         );
-      }))), /* @__PURE__ */ React.createElement("div", { className: "external-player-settings-section" }, /* @__PURE__ */ React.createElement(Button, { variant: "danger", onClick: resetDraftSettings }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.reset" })))),
+      })))), /* @__PURE__ */ React.createElement("div", { className: "ep-section" }, /* @__PURE__ */ React.createElement(Button, { variant: "danger", onClick: resetDraftSettings }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.reset" })))),
       /* @__PURE__ */ React.createElement(Modal.Footer, null, /* @__PURE__ */ React.createElement(Button, { variant: "secondary", onClick: closeModal }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.cancel" })), /* @__PURE__ */ React.createElement(Button, { variant: "primary", onClick: confirmSettings }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.confirm" })))
     ));
   }
@@ -532,9 +551,13 @@
     );
   }
   function ExternalPlayerTabLabel() {
+    const { settings } = useSettingsState();
+    if (!settings.showSceneDetailButtons) return null;
     return /* @__PURE__ */ React.createElement(Nav.Item, { key: "external-player-tab-nav" }, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "external-player-tab" }, /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.5rem" } }, createPlayIcon({ style: { height: "1.25em", width: "1.25em" } }), /* @__PURE__ */ React.createElement(FormattedMessage, { id: "tab.label" })))));
   }
-  function ExternalPlayerTabHeader({ sceneProps }) {
+  function ExternalPlayerTabContent({ sceneProps }) {
+    const { settings } = useSettingsState();
+    if (!settings.showSceneDetailButtons) return null;
     return /* @__PURE__ */ React.createElement(
       Tab.Pane,
       {
@@ -558,7 +581,7 @@
     "ScenePage.TabContent",
     function(props, _, original) {
       original.props.children.push(
-        /* @__PURE__ */ React.createElement(ExternalPlayerTabHeader, { sceneProps: props })
+        /* @__PURE__ */ React.createElement(ExternalPlayerTabContent, { sceneProps: props })
       );
       return original;
     }
@@ -566,6 +589,8 @@
   PluginApi.patch.after(
     "SceneCard.Popovers",
     function(props, _, original) {
+      const settings = readSettings();
+      if (!settings.showSceneCardButtons) return original;
       if (!original.props.children) {
         original.props.children = createButtonGroup();
       }
