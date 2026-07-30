@@ -8,7 +8,7 @@ A collection of plugins for [Stash](https://github.com/stashapp/stash), maintain
 
 ## Plugin List
 
-- [External Player Launcher](projects/external-player-launcher/README.md)
+- [External Player Launcher](https://github.com/esumaka/external-player-launcher)
   - This plugin adds support for launching videos in external media players from scene cards and scene detail pages.
 
 ## Installing Plugins
@@ -20,35 +20,3 @@ A collection of plugins for [Stash](https://github.com/stashapp/stash), maintain
 3. Click **Confirm** to add the source
 4. Select the plugin you want from the Available Plugins list and click **Install**
 5. Refresh the Stash page for the plugin to take effect
-
-## Development
-
-### Requirements
-
-- [Node.js](https://nodejs.org/) >= 18
-- [pnpm](https://pnpm.io/)
-
-### Enter the Project Directory
-
-- Run `cd projects/{project-name}`
-
-### Building a Plugin
-
-- Run `pnpm install`
-- Run `npm run build`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `build` script
-- Build output will be placed in the project's `dist` folder
-
-### Deploying to Local Stash (for debugging)
-
-- Before deploying, modify the `pluginsDir` in `deploy.js` to point to your Stash plugins directory
-- Run `npm run deploy`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `deploy` script
-- In Stash, go to **Settings** → **Plugins**, click **Reload Plugins**, then refresh the Stash page for the plugin to take effect
-
-### Publishing a Plugin
-
-- Run `npm run publish`, or in Visual Studio Code go to **Explorer → NPM Scripts** and click the `publish` script
-- The build output will be copied to `plugins/{project-name}`
-
-## Contributing
-
-Issues and Pull Requests are welcome.
