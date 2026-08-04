@@ -20,6 +20,7 @@
   const { faGear } = FontAwesomeSolid;
   const { useConfiguration } = PluginApi.utils.StashService;
   const { IntlProvider, FormattedMessage } = Intl;
+  const PLUGIN_VERSION = "1.2.0";
   const pluginID = "external-player-launcher";
   const iconsPath = "./plugin/external-player-launcher/assets/icons";
   const localesBase = `./plugin/external-player-launcher/assets/locales`;
@@ -37,41 +38,29 @@
   ];
   const messagesCache = {};
   const defaultLocale = "en-US";
-  async function loadMessages(locale) {
+  function loadMessages(locale) {
     if (messagesCache[locale]) return messagesCache[locale];
-    const tryLoad = async (l) => {
-      const res = await fetch(`${localesBase}/${l}.json`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
-    };
-    try {
-      const messages = await tryLoad(locale);
-      messagesCache[locale] = messages;
-      return messages;
-    } catch {
-      if (locale.startsWith("zh") && locale !== "zh-CN") {
-        try {
-          const messages = await tryLoad("zh-CN");
-          messagesCache[locale] = messages;
-          return messages;
-        } catch {
-        }
+    const promise = (async () => {
+      const tryLoad = async (l) => {
+        const res = await fetch(`${localesBase}/${l}.json?v=${PLUGIN_VERSION}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      };
+      try {
+        return await tryLoad(locale);
+      } catch {
+        if (locale !== defaultLocale) return loadMessages(defaultLocale);
+        return {};
       }
-      if (locale !== defaultLocale) {
-        const fallback = await loadMessages(defaultLocale);
-        messagesCache[locale] = fallback;
-        return fallback;
-      }
-      return {};
-    }
+    })();
+    messagesCache[locale] = promise;
+    return promise;
   }
   function PluginIntlProvider({ children }) {
     const config = useConfiguration();
     const language = config.data?.configuration?.interface?.language;
     const locale = language || defaultLocale;
-    const [messages, setMessages] = React.useState(
-      () => messagesCache[locale] ?? {}
-    );
+    const [messages, setMessages] = React.useState({});
     React.useEffect(() => {
       let cancelled = false;
       loadMessages(locale).then((msgs) => {
@@ -92,7 +81,8 @@
     singlePlayerId: playerButtons[0].id,
     singlePlayerMode: false,
     showSceneCardButtons: true,
-    showSceneDetailButtons: true
+    showSceneDetailButtons: true,
+    showSceneToolbarButtons: true
   };
   function cloneSettings(settings) {
     return { ...settings };
@@ -335,10 +325,10 @@
       /* @__PURE__ */ React.createElement("path", { d: "M0 12V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm6.79-6.907A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" })
     );
   }
-  function SettingsModal() {
-    return /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement(SettingsModalInner, null));
+  function SettingsModal({ refreshOnSave }) {
+    return /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement(SettingsModalInner, { refreshOnSave }));
   }
-  function SettingsModalInner() {
+  function SettingsModalInner({ refreshOnSave }) {
     const intl = Intl.useIntl();
     const [show, setShow] = React.useState(false);
     const { settings } = useSettingsState();
@@ -374,6 +364,9 @@
     const confirmSettings = () => {
       saveSettings(draftSettings);
       setShow(false);
+      if (refreshOnSave) {
+        window.location.reload();
+      }
     };
     const resetDraftSettings = () => {
       setDraftSettings(cloneSettings(defaultSettings));
@@ -421,7 +414,19 @@
             showSceneDetailButtons: event.target.checked
           }))
         }
-      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.showSceneDetailButtonsHint" })))), /* @__PURE__ */ React.createElement("div", { className: "ep-section" }, /* @__PURE__ */ React.createElement("div", { className: "ep-heading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.playerGroupTitle" })), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
+      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.showSceneDetailButtonsHint" }))), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
+        Form.Check,
+        {
+          type: "switch",
+          id: "external-player-show-toolbar-buttons",
+          label: intl.formatMessage({ id: "settings.showSceneToolbarButtons" }),
+          checked: draftSettings.showSceneToolbarButtons,
+          onChange: (event) => setDraftSettings((current) => ({
+            ...current,
+            showSceneToolbarButtons: event.target.checked
+          }))
+        }
+      ), /* @__PURE__ */ React.createElement("div", { className: "ep-hint" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.showSceneToolbarButtonsHint" })))), /* @__PURE__ */ React.createElement("div", { className: "ep-section" }, /* @__PURE__ */ React.createElement("div", { className: "ep-heading" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "settings.playerGroupTitle" })), /* @__PURE__ */ React.createElement("div", { className: "ep-options" }, /* @__PURE__ */ React.createElement(
         Form.Check,
         {
           type: "switch",
@@ -551,26 +556,24 @@
     );
   }
   function ExternalPlayerTabLabel() {
-    const { settings } = useSettingsState();
-    if (!settings.showSceneDetailButtons) return null;
     return /* @__PURE__ */ React.createElement(Nav.Item, { key: "external-player-tab-nav" }, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "external-player-tab" }, /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.5rem" } }, createPlayIcon({ style: { height: "1.25em", width: "1.25em" } }), /* @__PURE__ */ React.createElement(FormattedMessage, { id: "tab.label" })))));
   }
   function ExternalPlayerTabContent({ sceneProps }) {
-    const { settings } = useSettingsState();
-    if (!settings.showSceneDetailButtons) return null;
     return /* @__PURE__ */ React.createElement(
       Tab.Pane,
       {
         key: "external-player-tab-content",
         eventKey: "external-player-tab"
       },
-      /* @__PURE__ */ React.createElement("div", { className: "external-player-tab-header" }, /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement("h5", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "tab.header" }))), /* @__PURE__ */ React.createElement(SettingsModal, null)),
+      /* @__PURE__ */ React.createElement("div", { className: "external-player-tab-header" }, /* @__PURE__ */ React.createElement(PluginIntlProvider, null, /* @__PURE__ */ React.createElement("h5", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "tab.header" }))), /* @__PURE__ */ React.createElement(SettingsModal, { refreshOnSave: true })),
       /* @__PURE__ */ React.createElement(ExternalPlayerButtonList, { sceneProps })
     );
   }
   PluginApi.patch.after(
     "ScenePage.Tabs",
     function(props, _, original) {
+      const settings = readSettings();
+      if (!settings.showSceneDetailButtons) return original;
       original.props.children.push(
         /* @__PURE__ */ React.createElement(ExternalPlayerTabLabel, null)
       );
@@ -580,8 +583,35 @@
   PluginApi.patch.after(
     "ScenePage.TabContent",
     function(props, _, original) {
+      const settings = readSettings();
+      if (!settings.showSceneDetailButtons) return original;
       original.props.children.push(
         /* @__PURE__ */ React.createElement(ExternalPlayerTabContent, { sceneProps: props })
+      );
+      return original;
+    }
+  );
+  PluginApi.patch.after(
+    "ScenePage",
+    function(props, _, original) {
+      const settings = readSettings();
+      if (!settings.showSceneToolbarButtons) return original;
+      const predicate = (node) => {
+        if (!(node?.type === "span" && node.props?.className === "scene-toolbar-group")) return false;
+        let children = node.props?.children;
+        if (!children) return false;
+        if (!Array.isArray(children)) {
+          children = [children];
+        }
+        return children.some(
+          (item) => item?.type === "span" && item.props?.children?.type?.displayName === "Dropdown"
+        );
+      };
+      injectIntoReactTree(
+        original,
+        predicate,
+        "prependChild",
+        /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(SceneCardExternalPlayerControls, { sceneProps: props }))
       );
       return original;
     }
@@ -598,7 +628,7 @@
         original,
         (node) => node?.type instanceof Object && node.type?.displayName === "ButtonGroup",
         "appendChild",
-        /* @__PURE__ */ React.createElement(SceneCardExternalPlayerControls, { key: "external-player-controls", sceneProps: props })
+        /* @__PURE__ */ React.createElement(SceneCardExternalPlayerControls, { sceneProps: props })
       );
       return original;
     }
@@ -619,4 +649,10 @@
       return original;
     }
   );
+  (async () => {
+    const res = await loadMessages(defaultLocale);
+    if (!res) return;
+    console.debug(`[${pluginID}] Preloaded locale messages: ${defaultLocale}`);
+  })();
+  console.debug(`[${pluginID}] Loaded plugin successfully`);
 })();
