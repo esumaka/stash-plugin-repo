@@ -13,10 +13,10 @@ A collection of plugins for [Stash](https://github.com/stashapp/stash), maintain
 
 ## Installing Plugins
 
-1. In Stash, go to **Settings** → **Plugins**
+1. In Stash, open **Settings** → **Plugins**.
 2. Click **Add Source** and fill in the following:
    - **Name**: `esumaka plugin repo`
    - **Source URL**: `https://esumaka.github.io/stash-plugin-repo/main/index.yml`
-3. Click **Confirm** to add the source
-4. Select the plugin you want from the Available Plugins list and click **Install**
-5. Refresh the Stash page for the plugin to take effect
+3. Click **Confirm** to add the source.
+4. Select the plugin you want from the list of Available Plugins and click **Install**.
+5. Refresh the Stash page for the plugin to take effect.
